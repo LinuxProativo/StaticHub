@@ -1,0 +1,11 @@
+----------------------------
+Sat Jul  5 20:44:06 -03 2025
+----------------------------
+------
+Added:
+------
+bwrap: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=4cdc82d360c53353e80a84c752f8e815736f0db0, stripped
+curl:  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=4b02a1dde0633a81eca5e28a65b6c24698f71292, stripped
+proot: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=70fd0dfd359932fd8450fc4b77833fb345a08a7e, stripped
+shc:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=d245ed6636e8b2ebf2a59f725b07a87b895b4205, stripped
+wget:  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=e09e65b2d1d6d730d0c290dfa7f694e4f9c0c384, stripped
