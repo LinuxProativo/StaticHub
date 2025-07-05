@@ -1,0 +1,42 @@
+#!/bin/sh
+
+PKG_NAME=wget
+PKG_VERSION='1.25.0'
+OUTPUT_DIR="$PWD/_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://ftp.gnu.org/gnu/wget/wget-$PKG_VERSION.tar.gz
+tar xzf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ${PKG_NAME}-${PKG_VERSION}/
+
+apk add openssl-libs-static openssl-dev zlib-static libssh2-dev perl libidn2-dev libidn2-static perl-http-daemon libunistring-static libunistring-dev #pcre2-dev pcre2-static
+
+CFLAGS="$CFLAGS -flto=auto -Os -static" LDFLAGS="-static" PKG_CONFIG="pkg-config --static" \
+./configure \
+    --prefix=/usr \
+    --with-libidn \
+    --with-ssl=openssl \
+    --disable-nls \
+    --disable-pcre \
+    --disable-hsts \
+    --disable-ntlm \
+    --disable-debug \
+    --without-libuuid
+make -j"$(expr "$(nproc)" + 1)"
+
+strip src/wget
+mkdir -p "$OUTPUT_DIR"
+mv -v src/wget "$OUTPUT_DIR/wget"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/wget"

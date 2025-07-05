@@ -1,0 +1,30 @@
+#!/bin/sh
+
+PKG_NAME=shc
+PKG_VERSION='4.0.3'
+OUTPUT_DIR="$PWD/_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/mrbitsdcf/shc/archive/refs/tags/$PKG_VERSION.tar.gz
+tar xzf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ${PKG_NAME}-${PKG_VERSION}/
+
+./configure CFLAGS="-static -Os" LDFLAGS="-static"
+make -j"$(expr "$(nproc)" + 1)"
+
+strip src/shc
+mkdir -p "$OUTPUT_DIR"
+mv -v src/shc "$OUTPUT_DIR/shc"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/shc"

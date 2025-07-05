@@ -1,0 +1,38 @@
+#!/bin/sh
+
+PKG_NAME=bubblewrap
+PKG_VERSION='0.11.0'
+OUTPUT_DIR="$PWD/_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/containers/bubblewrap/archive/v$PKG_VERSION.tar.gz
+tar xzf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ${PKG_NAME}-${PKG_VERSION}/
+
+apk add meson libcap-dev libcap-static docbook-xsl
+
+abuild-meson \
+    -Drequire_userns=true \
+    -Dman=disabled \
+    -Dtests=false \
+    -Dc_link_args="$LDFLAGS -static" \
+    --prefer-static \
+    output-static
+meson compile -C output-static
+
+strip output-static/bwrap
+mkdir -p "$OUTPUT_DIR"
+mv -v output-static/bwrap "$OUTPUT_DIR/bwrap"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/bwrap"
