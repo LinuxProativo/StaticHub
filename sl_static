@@ -1,0 +1,33 @@
+#!/bin/sh
+
+PKG_NAME=sl
+BINARY="$PKG_NAME"
+PKG_VERSION=5.02
+OUTPUT_DIR="$PWD/_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add ncurses-dev ncurses-static
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/mtoyoda/sl/archive/$PKG_VERSION.tar.gz
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+sed -i '/^CFLAGS/s/-O/-static -Os/' Makefile
+make -j"$(expr "$(nproc)" + 1)"
+
+strip ./$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v ./$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/BINARY"

@@ -1,4 +1,15 @@
 ----------------------------
+Sun Jul  6 11:59:17 -03 2025
+----------------------------
+------
+Added:
+------
+cmatrix: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=ebf31ee55b21341bd1c8b3535706d7b197a83803, stripped
+links:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=ae435857e0596d56a6103c8927562087d63661d8, stripped
+lynx:    ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=6b62e655cf38a7b6d603a4342181d0ffe44aae05, stripped
+sl:      ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=54e19a6f1b480e96b345534170cd365d6138ec6c, stripped
+upx:     ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=efd2e1440316c61abcec3aa12fca751890e2d9a5, stripped
+----------------------------
 Sat Jul  5 20:44:06 -03 2025
 ----------------------------
 ------
