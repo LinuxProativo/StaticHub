@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TAG="Continuous"
+TITLE="Static Continuous Release"
+NOTES="Statically compiled binaries included in this release, x86_64."
+RELEASE_BINARIES=()
+
+for BIN in *; do
+    grep -Eo "ELF.*static.*linked" <(file "$BIN") && RELEASE_BINARIES+=("$BIN")
+done
+
+gh release delete "$TAG" --yes
+gh release create "$TAG" "${RELEASE_BINARIES[@]}" --title "$TITLE" --notes "$NOTES"
