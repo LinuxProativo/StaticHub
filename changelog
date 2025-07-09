@@ -1,4 +1,19 @@
 ----------------------------
+Tue Jul  8 21:12:52 -03 2025
+----------------------------
+------
+Added:
+------
+ebfc:     ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=5bf9197788177d0f48dfafc520e3e5370ce6e82f, stripped
+elfls:    ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=93570b860da4b280d7bd4caa34afeb4436a7c4b6, stripped
+elftoc:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=5bc4c7a50b2008d8d6c443dbc8d0ef7f17afcdf4, stripped
+infect:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=45db4677217591b43a5d9c711161d3b3fae2feba, stripped
+lolcat:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=2515d3b8707d95944f517b4903d727c8892ff214, stripped
+objres:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=4380e319510d7d35a046ee817518a473860b93cb, stripped
+patchelf: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=e0718578a81becc5545f72a13d608475c352a929, stripped
+rebind:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=aa6af796ba1286fa08007d61176fb4d9b70e6e7b, stripped
+sstrip:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=dbf801958203194fdb5d61d858f0de3267c7ccca, stripped
+----------------------------
 Sun Jul  6 11:59:17 -03 2025
 ----------------------------
 ------

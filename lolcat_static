@@ -1,8 +1,8 @@
 #!/bin/sh
 
-PKG_NAME=sl
+PKG_NAME=lolcat
 BINARY="$PKG_NAME"
-PKG_VERSION=5.02
+PKG_VERSION=1.4
 OUTPUT_DIR="$PWD/_output"
 CWD="$(pwd)"
 
@@ -13,15 +13,12 @@ cd "$TMPDIR" || exit 1
 
 set -e
 
-apk add ncurses-dev ncurses-static
-
-wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/mtoyoda/sl/archive/$PKG_VERSION.tar.gz
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/jaseg/lolcat/archive/v$PKG_VERSION.tar.gz
 tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.gz
 
 cd ${PKG_NAME}*${PKG_VERSION}*/
 
-sed -i '/^CFLAGS/s/-O/-static -Os/' Makefile
-make -j"$(expr "$(nproc)" + 1)"
+make CFLAGS="-std=c11 -Wall -Wextra -Os -Wno-sign-compare -static" -j"$(expr "$(nproc)" + 1)"
 
 strip ./$BINARY
 mkdir -p "$OUTPUT_DIR"

@@ -31,4 +31,4 @@ mv -v ./$BINARY "$OUTPUT_DIR/$BINARY"
 cd "$CWD"
 rm -rf "$TMPDIR"
 
-echo "Binário salvo em $OUTPUT_DIR/BINARY"
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"
