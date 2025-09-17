@@ -1,0 +1,34 @@
+#!/bin/sh
+
+PKG_NAME=ddrescue
+PKG_VERSION=1.29.1
+LINK="https://ftp.gnu.org/gnu/ddrescue/ddrescue-$PKG_VERSION.tar.lz"
+BINARY="$PKG_NAME"
+OUTPUT_DIR="$PWD/_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add lzip
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.lz -c $LINK
+lzip -cd ${PKG_NAME}-${PKG_VERSION}.tar.lz | tar -xf -
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+./configure CFLAGS="-static -Oz" LDFLAGS="-static" --prefix=/usr
+make -j"$(expr "$(nproc)" + 1)"
+
+strip ./$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v ./$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"
