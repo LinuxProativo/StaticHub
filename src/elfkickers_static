@@ -1,0 +1,37 @@
+#!/bin/sh
+
+PKG_NAME=elfkickers
+PKG_VERSION=3.2
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c http://www.muppetlabs.com/~breadbox/pub/software/ELFkickers-3.2.tar.gz
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ELFkickers-3.2/
+
+apk add setconf
+
+for tool in ebfc elfls elftoc infect objres rebind sstrip; do
+    setconf $tool/Makefile CFLAGS "-Os -static -I ../elfrw $CFLAGS -Wl,-z,relro,-z,now"
+    setconf $tool/Makefile LDFLAGS "-static $LDFLAGS -z,relro,-z,now"
+    sed -i '/^CC *=/aLDFLAGS = -static' $tool/Makefile
+done
+
+make
+
+strip bin/*
+mkdir -p "$OUTPUT_DIR"
+mv -v bin/* "$OUTPUT_DIR"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binários salvos em $OUTPUT_DIR"

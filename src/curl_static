@@ -1,0 +1,51 @@
+#!/bin/sh
+
+CURL_VERSION='8.14.1'
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && CURL_VERSION="$1"
+
+set -e
+
+wget https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz
+tar xzf curl-${CURL_VERSION}.tar.gz
+
+cd curl-${CURL_VERSION}/
+
+apk add build-base clang openssl-dev nghttp2-dev nghttp2-static libssh2-dev libssh2-static perl
+apk add openssl-libs-static zlib-static || true
+
+export CC=clang
+
+LDFLAGS="-static -Os" PKG_CONFIG="pkg-config --static" ./configure \
+    --disable-shared \
+    --enable-static \
+    --disable-ldap \
+    --with-ssl \
+    --with-libssh2 \
+    --disable-docs \
+    --disable-manual \
+    --without-libpsl \
+    --disable-ares \
+    --disable-verbose \
+    --disable-aws \
+    --disable-versioned-symbols \
+    --enable-symbol-hiding \
+    --disable-netrc \
+    --disable-get-easy-options \
+    --disable-dateparse
+
+make -j"$(expr "$(nproc)" + 1)" V=1 LDFLAGS="-static -all-static"
+
+strip src/curl
+mkdir -p "$OUTPUT_DIR"
+mv -v src/curl "$OUTPUT_DIR/curl"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/curl"

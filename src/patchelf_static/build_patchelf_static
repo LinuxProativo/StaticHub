@@ -1,0 +1,32 @@
+#!/bin/sh
+
+PKG_NAME=patchelf
+BINARY="$PKG_NAME"
+PKG_VERSION=0.18.0
+OUTPUT_DIR="$PWD/../../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/NixOS/patchelf/releases/download/$PKG_VERSION/patchelf-$PKG_VERSION.tar.gz
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ${PKG_NAME}-${PKG_VERSION}*/
+
+patch -p1 < "$CWD/fix-completion.patch"
+./configure CFLAGS="-static -Os" LDFLAGS="-static"
+make -j"$(expr "$(nproc)" + 1)"
+
+strip src/$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v src/$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

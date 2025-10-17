@@ -1,0 +1,45 @@
+#!/bin/sh
+
+PKG_NAME=links
+BINARY="$PKG_NAME"
+PKG_VERSION=2.30
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add bzip2-static libevent-static openssl-libs-static zlib-static zstd-static bzip2-dev libevent-dev openssl-dev zlib-dev zstd-dev
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c http://links.twibright.com/download/links-$PKG_VERSION.tar.bz2
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+CFLAGS="-static -Os" LDFLAGS="-static" PKG_CONFIG="pkg-config --static" ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-javascript \
+    --disable-graphics \
+    --without-fb \
+    --without-svgalib \
+    --without-directfb \
+    --without-atheos \
+    --without-pmshell \
+    --without-x \
+    --disable-nls
+make -j"$(expr "$(nproc)" + 1)"
+
+strip ./$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v ./$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

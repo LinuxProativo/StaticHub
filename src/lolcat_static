@@ -1,0 +1,30 @@
+#!/bin/sh
+
+PKG_NAME=lolcat
+BINARY="$PKG_NAME"
+PKG_VERSION=1.4
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/jaseg/lolcat/archive/v$PKG_VERSION.tar.gz
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+make CFLAGS="-std=c11 -Wall -Wextra -Os -Wno-sign-compare -static" -j"$(expr "$(nproc)" + 1)"
+
+strip ./$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v ./$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

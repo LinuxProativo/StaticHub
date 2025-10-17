@@ -1,0 +1,31 @@
+#!/bin/sh
+
+PKG_NAME=proot
+PKG_VERSION='5.4.0'
+OUTPUT_DIR="$PWD/../../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.gz -c https://github.com/proot-me/proot/archive/v$PKG_VERSION/proot-$PKG_VERSION.tar.gz
+tar xzf ${PKG_NAME}-${PKG_VERSION}.tar.gz
+
+cd ${PKG_NAME}-${PKG_VERSION}/
+
+apk add bsd-compat-headers libarchive-dev linux-headers py3-docutils talloc-dev talloc-static uthash-dev
+patch -p1 < "$CWD"/fix-basename.patch
+
+make -C src proot -j"$(expr "$(nproc)" + 1)" LDFLAGS="$LDFLAGS -static -ltalloc"
+
+strip src/proot
+mkdir -p "$OUTPUT_DIR"
+mv -v src/proot "$OUTPUT_DIR/proot"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/proot"

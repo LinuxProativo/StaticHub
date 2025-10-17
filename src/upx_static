@@ -1,0 +1,40 @@
+#!/bin/sh
+
+PKG_NAME=upx
+BINARY="$PKG_NAME"
+PKG_VERSION='4.2.4'
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add cmake samurai xz
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c https://github.com/upx/upx/releases/download/v$PKG_VERSION/upx-$PKG_VERSION-src.tar.xz
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}-${PKG_VERSION}*/
+
+cmake -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_C_FLAGS="-static -Os" \
+	-DCMAKE_EXE_LINKER_FLAGS="-static" \
+	-DUPX_CONFIG_DISABLE_WERROR=ON \
+	-DUPX_CONFIG_DISABLE_SANITIZE=ON \
+	-DUPX_CONFIG_DISABLE_GITREV=ON
+cmake --build build -j"$(nproc)"
+
+strip build/$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v build/$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"
