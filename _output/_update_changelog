@@ -1,0 +1,35 @@
+#!/bin/bash
+
+test -f __block && echo "Execução bloqueada!" && exit
+test "$1" = _news -a -e _news -a -e _c_news && mv _news _out && mv _c_news _c_out
+
+test -e _news || printf "%s\n" "$(cut -d":" -f1 <(grep ELF <(file *)))" > _news
+test -e _out || printf "%s\n" "$(cut -d":" -f1 <(grep ELF <(file *)))" > _out
+test -e _c_news || grep ELF <(file *) > _c_news
+test -e _c_out || grep ELF <(file *) > _c_out
+
+add="$(comm -23 _news _out)"
+rem="$(comm -13 _news _out)"
+frt="$(comm -12 _news _out)"
+
+for f in $frt
+{
+    tmp="$(comm -23 <(grep "$f" _c_news) <(grep "$f" _c_out))"
+    test -z "$tmp" || cng+="${cng:+\n}$tmp"
+}
+
+test -e ../changelog || add="$frt"
+
+test -z "$add" -a -z "$rem" -a -z "$cng" -a -e ../changelog && exit
+test -e ../changelog && bak="$(< ../changelog)" && cp -a ../changelog ./_changelog-bak
+
+echo -e "----------------------------\n$(unset LANG LC_ALL; date)\n----------------------------" > ../changelog
+
+> __block
+test -z "$add" || echo -e "------\nAdded:\n------\n$(grep ELF <(file $add))" >> ../changelog
+test -z "$cng" || echo -e "--------\nChanged:\n--------\n$(grep ELF <(file $cng))" >> ../changelog
+test -z "$rem" || echo -e "--------\nRemoved:\n--------\n$(grep ELF <(file $rem))" >> ../changelog
+test -z "$bak" || echo -e "$bak" >> ../changelog
+rm __block
+
+echo "ChangeLog Gerado."

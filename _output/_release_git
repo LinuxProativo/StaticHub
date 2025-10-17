@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+set -e
+
+# ======================================================
+#  StaticHub Automated Release Script (v3)
+#  Autor: LinuxDicasPro
+# ======================================================
+
+REPO="LinuxDicasPro/StaticHub"
+CATEGORY_DIR="category"
+README="../README.md"
+DATE=$(date +"%Y-%m-%d")
+
+# ======================================================
+# Funções auxiliares
+# ======================================================
+
+calc_hash() {
+    sha256sum "$1" | awk '{print $1}'
+}
+
+write_checksum() {
+    local file="$1"
+    local hash=$(calc_hash "$file")
+    echo "$hash  $(basename "$file")" > "${file}.sha256"
+}
+
+get_remote_hash() {
+    local release_name="$1"
+    local bin_name="$2"
+    local url="https://github.com/${REPO}/releases/download/${release_name}/${bin_name}.sha256"
+
+    curl -fsSL "$url" 2>/dev/null | awk '{print $1}' || echo ""
+}
+
+create_or_update_release() {
+    local release_name="$1"
+    shift
+    local files=("$@")
+
+    echo -e "\n📦 Processando release: $release_name"
+
+    # Gera checksums locais
+    for f in "${files[@]}"; do
+        write_checksum "$f"
+    done
+
+    # Verificar se já existe release
+    if gh release view "$release_name" -R "$REPO" &>/dev/null; then
+        echo "🔍 Release '$release_name' já existe, verificando atualizações..."
+
+        local needs_update=false
+        for f in "${files[@]}"; do
+            local base=$(basename "$f")
+            local local_hash=$(calc_hash "$f")
+            local remote_hash=$(get_remote_hash "$release_name" "$base")
+
+            if [[ -z "$remote_hash" ]]; then
+                echo "➕ Novo arquivo detectado: $base"
+                needs_update=true
+            elif [[ "$local_hash" != "$remote_hash" ]]; then
+                echo "⚠️ Atualização detectada: $base (hash diferente)"
+                needs_update=true
+            fi
+        done
+
+        if [ "$needs_update" = true ]; then
+            echo "♻️ Atualizando release '$release_name'..."
+            gh release delete "$release_name" -R "$REPO" -y || true
+            gh release create "$release_name" "${files[@]}" "${files[@]/%/.sha256}" \
+                -R "$REPO" \
+                --title "$release_name" \
+                --notes "Atualizado em $DATE — Binários estáticos Linux x86_64" \
+                --latest=false
+        else
+            echo "✅ Nenhuma atualização necessária para '$release_name'."
+        fi
+    else
+        echo "🚀 Criando novo release '$release_name'..."
+        gh release create "$release_name" "${files[@]}" "${files[@]/%/.sha256}" \
+            -R "$REPO" \
+            --title "$release_name" \
+            --notes "Binários estáticos Linux x86_64 — Criado em $DATE" \
+            --latest=false
+    fi
+}
+
+add_to_readme() {
+    local name="$1"
+    shift
+    local files=("$@")
+
+    local links=()
+    for f in "${files[@]}"; do
+        local base=$(basename "$f")
+        links+=("[${base}](https://github.com/${REPO}/releases/download/${name}/${base})")
+    done
+    local joined=$(IFS=, ; echo "${links[*]}")
+
+    echo "| ${name} | ${DATE} | ${joined} |" >> "$README"
+}
+
+# ======================================================
+# Gerar novo README
+# ======================================================
+echo '<p align="center">
+  <img src="logo.png" alt="StaticHub" width="320"/>
+</p>
+
+<h1 align="center"><strong>StaticHub - Static Binary Repository</strong></h1>
+
+### **This repository contains statically linked binaries compiled using ALPack, for portability and ease of distribution.**
+
+## 📝 Description
+- ⚙️ **All binaries are built to be static or self-contained with no external shared library dependencies.**
+- ⚙️ **Intended for use in minimal, embedded, containerized environments or as a portable tool.**
+- ⚙️ **Each release includes verified static binaries for supported platforms.**
+- ⚙️ **Commands ready to download for Linux 64-bit.**
+
+| Release  | Data | Download  |
+|----------|------|-----------|' > "$README"
+
+# ======================================================
+# Processar categorias
+# ======================================================
+if [ -d "$CATEGORY_DIR" ]; then
+    for catfile in "$CATEGORY_DIR"/*; do
+        [ -f "$catfile" ] || continue
+        release_name=$(basename "$catfile")
+        mapfile -t bins < "$catfile"
+        files=()
+        for b in "${bins[@]}"; do
+            [[ -z "$b" ]] && continue
+            [ -f "$b" ] && files+=("$b") || echo "⚠️ '$b' não encontrado."
+        done
+        [ "${#files[@]}" -gt 0 ] && create_or_update_release "$release_name" "${files[@]}" && add_to_readme "$release_name" "${files[@]}"
+    done
+fi
+
+# ======================================================
+# Processar binários individuais
+# ======================================================
+for binfile in *; do
+    grep -qEo "ELF.*static.*linked" <(file "$binfile") || continue
+    [ -f "$binfile" ] || continue
+    [[ "$binfile" == *.sha256 || "$binfile" == *.txt || "$binfile" == "_release_git" || "$binfile" == "$README" ]] && continue
+
+    bin_name=$(basename "$binfile")
+    found_in_cat=false
+
+    if [ -d "$CATEGORY_DIR" ]; then
+        for catfile in "$CATEGORY_DIR"/*; do
+            grep -qx "$bin_name" "$catfile" 2>/dev/null && found_in_cat=true && break
+        done
+    fi
+
+    if [ "$found_in_cat" = false ]; then
+        create_or_update_release "$bin_name" "$binfile"
+        add_to_readme "$bin_name" "$binfile"
+    fi
+done
+
+echo -e '\n## 📜 License\n\nThis project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.\n' >> "$README"
+echo -e "\n✅ Releases e checksums atualizados com sucesso!"
