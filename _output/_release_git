@@ -95,7 +95,7 @@ add_to_readme() {
         local base=$(basename "$f")
         links+=("[${base}](https://github.com/${REPO}/releases/download/${name}/${base})")
     done
-    local joined=$(IFS=, ; echo "${links[*]}")
+    local joined="${links[*]}"
 
     echo "| ${name} | ${DATE} | ${joined} |" >> "$README"
 }

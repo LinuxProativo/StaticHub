@@ -14,7 +14,7 @@
 
 | Release  | Data | Download  |
 |----------|------|-----------|
-| elfkickers | 2025-10-17 | [ebfc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/ebfc),[elfls](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elfls),[elftoc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elftoc),[infect](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/infect),[objres](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/objres),[rebind](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/rebind),[sstrip](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/sstrip) |
+| elfkickers | 2025-10-17 | [ebfc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/ebfc) [elfls](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elfls) [elftoc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elftoc) [infect](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/infect) [objres](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/objres) [rebind](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/rebind) [sstrip](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/sstrip) |
 | bwrap | 2025-10-17 | [bwrap](https://github.com/LinuxDicasPro/StaticHub/releases/download/bwrap/bwrap) |
 | cmatrix | 2025-10-17 | [cmatrix](https://github.com/LinuxDicasPro/StaticHub/releases/download/cmatrix/cmatrix) |
 | curl | 2025-10-17 | [curl](https://github.com/LinuxDicasPro/StaticHub/releases/download/curl/curl) |
