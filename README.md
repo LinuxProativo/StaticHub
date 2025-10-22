@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="StaticHub" width="320"/>
+  <img src="logo.png" alt="StaticHub" width="256"/>
 </p>
 
 <h1 align="center"><strong>StaticHub - Static Binary Repository</strong></h1>
