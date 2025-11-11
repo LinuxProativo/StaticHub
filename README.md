@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="StaticHub" width="256"/>
+  <img src="logo.png" alt="StaticHub" width="320"/>
 </p>
 
 <h1 align="center"><strong>StaticHub - Static Binary Repository</strong></h1>
@@ -14,20 +14,24 @@
 
 | Release  | Data | Download  |
 |----------|------|-----------|
-| elfkickers | 2025-10-17 | [ebfc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/ebfc) [elfls](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elfls) [elftoc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elftoc) [infect](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/infect) [objres](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/objres) [rebind](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/rebind) [sstrip](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/sstrip) |
-| bwrap | 2025-10-17 | [bwrap](https://github.com/LinuxDicasPro/StaticHub/releases/download/bwrap/bwrap) |
-| cmatrix | 2025-10-17 | [cmatrix](https://github.com/LinuxDicasPro/StaticHub/releases/download/cmatrix/cmatrix) |
-| curl | 2025-10-17 | [curl](https://github.com/LinuxDicasPro/StaticHub/releases/download/curl/curl) |
-| ddrescue | 2025-10-17 | [ddrescue](https://github.com/LinuxDicasPro/StaticHub/releases/download/ddrescue/ddrescue) |
-| links | 2025-10-17 | [links](https://github.com/LinuxDicasPro/StaticHub/releases/download/links/links) |
-| lolcat | 2025-10-17 | [lolcat](https://github.com/LinuxDicasPro/StaticHub/releases/download/lolcat/lolcat) |
-| lynx | 2025-10-17 | [lynx](https://github.com/LinuxDicasPro/StaticHub/releases/download/lynx/lynx) |
-| patchelf | 2025-10-17 | [patchelf](https://github.com/LinuxDicasPro/StaticHub/releases/download/patchelf/patchelf) |
-| proot | 2025-10-17 | [proot](https://github.com/LinuxDicasPro/StaticHub/releases/download/proot/proot) |
-| shc | 2025-10-17 | [shc](https://github.com/LinuxDicasPro/StaticHub/releases/download/shc/shc) |
-| sl | 2025-10-17 | [sl](https://github.com/LinuxDicasPro/StaticHub/releases/download/sl/sl) |
-| upx | 2025-10-17 | [upx](https://github.com/LinuxDicasPro/StaticHub/releases/download/upx/upx) |
-| wget | 2025-10-17 | [wget](https://github.com/LinuxDicasPro/StaticHub/releases/download/wget/wget) |
+| elfkickers | 2025-11-11 | [ebfc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/ebfc) [elfls](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elfls) [elftoc](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/elftoc) [infect](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/infect) [objres](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/objres) [rebind](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/rebind) [sstrip](https://github.com/LinuxDicasPro/StaticHub/releases/download/elfkickers/sstrip) |
+| f3 | 2025-11-11 | [f3brew](https://github.com/LinuxDicasPro/StaticHub/releases/download/f3/f3brew) [f3fix](https://github.com/LinuxDicasPro/StaticHub/releases/download/f3/f3fix) [f3probe](https://github.com/LinuxDicasPro/StaticHub/releases/download/f3/f3probe) [f3read](https://github.com/LinuxDicasPro/StaticHub/releases/download/f3/f3read) [f3write](https://github.com/LinuxDicasPro/StaticHub/releases/download/f3/f3write) |
+| bwrap | 2025-11-11 | [bwrap](https://github.com/LinuxDicasPro/StaticHub/releases/download/bwrap/bwrap) |
+| cmatrix | 2025-11-11 | [cmatrix](https://github.com/LinuxDicasPro/StaticHub/releases/download/cmatrix/cmatrix) |
+| curl | 2025-11-11 | [curl](https://github.com/LinuxDicasPro/StaticHub/releases/download/curl/curl) |
+| dd | 2025-11-11 | [dd](https://github.com/LinuxDicasPro/StaticHub/releases/download/dd/dd) |
+| ddrescue | 2025-11-11 | [ddrescue](https://github.com/LinuxDicasPro/StaticHub/releases/download/ddrescue/ddrescue) |
+| fzf | 2025-11-11 | [fzf](https://github.com/LinuxDicasPro/StaticHub/releases/download/fzf/fzf) |
+| links | 2025-11-11 | [links](https://github.com/LinuxDicasPro/StaticHub/releases/download/links/links) |
+| lolcat | 2025-11-11 | [lolcat](https://github.com/LinuxDicasPro/StaticHub/releases/download/lolcat/lolcat) |
+| lynx | 2025-11-11 | [lynx](https://github.com/LinuxDicasPro/StaticHub/releases/download/lynx/lynx) |
+| parted | 2025-11-11 | [parted](https://github.com/LinuxDicasPro/StaticHub/releases/download/parted/parted) |
+| patchelf | 2025-11-11 | [patchelf](https://github.com/LinuxDicasPro/StaticHub/releases/download/patchelf/patchelf) |
+| proot | 2025-11-11 | [proot](https://github.com/LinuxDicasPro/StaticHub/releases/download/proot/proot) |
+| shc | 2025-11-11 | [shc](https://github.com/LinuxDicasPro/StaticHub/releases/download/shc/shc) |
+| sl | 2025-11-11 | [sl](https://github.com/LinuxDicasPro/StaticHub/releases/download/sl/sl) |
+| upx | 2025-11-11 | [upx](https://github.com/LinuxDicasPro/StaticHub/releases/download/upx/upx) |
+| wget | 2025-11-11 | [wget](https://github.com/LinuxDicasPro/StaticHub/releases/download/wget/wget) |
 
 ## 📜 License
 
