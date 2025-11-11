@@ -1,4 +1,18 @@
 ----------------------------
+Tue Nov 11 12:39:00 -03 2025
+----------------------------
+------
+Added:
+------
+dd:      ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=980a0bd4e0025e03406ed8ba0478820d469f458b, stripped
+f3brew:  ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, no section header
+f3fix:   ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, no section header
+f3probe: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, no section header
+f3read:  ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, no section header
+f3write: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, no section header
+fzf:     ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=4312b4156f1da2a2e1164c2b84ae2651eab59198, stripped
+parted:  ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, no section header
+----------------------------
 Wed Sep 17 18:29:12 -03 2025
 ----------------------------
 ------

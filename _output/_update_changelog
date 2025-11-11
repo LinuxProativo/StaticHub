@@ -1,7 +1,7 @@
 #!/bin/bash
 
 test -f __block && echo "Execução bloqueada!" && exit
-test "$1" = _news -a -e _news -a -e _c_news && mv _news _out && mv _c_news _c_out
+test "$1" = news -a -e _news -a -e _c_news && mv _news _out && mv _c_news _c_out
 
 test -e _news || printf "%s\n" "$(cut -d":" -f1 <(grep ELF <(file *)))" > _news
 test -e _out || printf "%s\n" "$(cut -d":" -f1 <(grep ELF <(file *)))" > _out

@@ -1,0 +1,43 @@
+#!/bin/sh
+
+PKG_NAME=coreutils
+PKG_VERSION=9.8
+LINK="https://ftp.gnu.org/gnu/coreutils/coreutils-$PKG_VERSION.tar.xz"
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add acl-dev attr-dev linux-headers openssl-dev perl utmps-dev xz utmps-static openssl-libs-static acl-static attr-static
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c $LINK
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+fu_cv_sys_stat_statvfs=n LDFLAGS="-static" \
+CFLAGS="$CFLAGS -I/usr/include/utmps -flto=auto -static -Os" \
+LIBS="-lutmps -lskarnet" \
+	./configure \
+		--prefix=/usr \
+		--bindir=/bin \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--disable-nls \
+		--with-openssl
+make -j"$(expr "$(nproc)" + 1)"
+
+strip src/dd
+mkdir -p "$OUTPUT_DIR"
+mv -v src/dd "$OUTPUT_DIR/dd"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR"
