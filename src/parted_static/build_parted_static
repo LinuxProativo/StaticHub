@@ -1,0 +1,45 @@
+#!/bin/sh
+
+PKG_NAME=parted
+PKG_VERSION=3.6
+LINK="https://ftp.gnu.org/gnu/parted/parted-$PKG_VERSION.tar.xz"
+BINARY="$PKG_NAME"
+OUTPUT_DIR="$PWD/../../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add bash lvm2-dev ncurses-dev readline-dev util-linux-dev lvm2-static ncurses-static readline-static util-linux-static coreutils eudev perl util-linux device-mapper device-mapper-static
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c $LINK
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+patch -p1 < "$CWD/fix-includes.patch"
+patch -p1 < "$CWD/fix-libintl-header-s390x.patch"
+patch -p1 < "$CWD/fix-truncate-tests.patch"
+patch -p1 < "$CWD/gcc15.patch"
+patch -p1 < "$CWD/make-tests.patch"
+patch -p1 < "$CWD/parted-include-sysmacros.patch"
+patch -p1 < "$CWD/skip-duplicate-bsd-test-on-s390x.patch"
+
+PKG_CONFIG="pkg-config --static" \
+CFLAGS="-static -Os" \
+LDFLAGS="-static" \
+./configure --prefix=/usr --disable-nls --disable-shared --enable-static
+make LDFLAGS="-all-static" -j"$(expr "$(nproc)" + 1)"
+
+strip parted/$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v parted/$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

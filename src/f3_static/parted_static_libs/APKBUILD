@@ -1,0 +1,50 @@
+# Contributor: Natanael Copa <ncopa@alpinelinux.org>
+# Maintainer: A. Wilcox <awilfox@adelielinux.org>
+pkgname=parted
+pkgver=3.6
+pkgrel=0
+pkgdesc="Utility to create, destroy, resize, check and copy partitions"
+url="https://www.gnu.org/software/parted/parted.html"
+arch="all"
+license="GPL-3.0+"
+subpackages="$pkgname-dev $pkgname-doc $pkgname-lang"
+depends=""
+makedepends="ncurses-dev lvm2-dev bash util-linux-dev autoconf automake"
+checkdepends="check-dev e2fsprogs python3"
+source="https://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.xz
+	fix-includes.patch
+	modern-c.patch
+	posix-shell.patch
+	sysmacros.patch
+	tests-call-name-correctly.patch
+	"
+
+build() {
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--disable-debug \
+		--enable-static \
+		--enable-shared \
+		--enable-device-mapper \
+		--without-readline
+	make
+}
+
+# check() {
+# 	make check
+# }
+
+package() {
+	make DESTDIR="$pkgdir" install
+	rm -rf "$pkgdir"/usr/lib/charset.alias
+	rmdir -p "$pkgdir"/usr/lib 2>/dev/null || true
+}
+
+sha512sums="034a44b25718acba175212019d24f092972a791c5bd1d921ae91e17478657a77c5c5dd0c832bed7968c3a07ec6c65c0785acfac2f90c1ca5e1692f3c141693ef  parted-3.6.tar.xz
+55ee63c218d1867c0f2c596e7c3eec5c42af160181456cc551fe3d432eabed0ac2dd3a3955ff0c375f76aeec8071e7f55a32834b87a0d39b8ef30361f671bfdd  fix-includes.patch
+66c74da28033b7340767c7339b307928c396930dca9c7cdd8f226f8cf18358eedba78ceba03036ad3f9a62fc5e164171edff81670477d3bf3af81847db3879d4  modern-c.patch
+507d19454aca6631fe387ca53b28f2925c325044efc7b506e81429a5b42914e56c39e1644c570840b4c4c153da742237428cba2a1ff651487f2ef8a0a8c64d1f  posix-shell.patch
+5d2e8f22b6cd5bdd3289996848279a945ca09acd2862e82283bb769c2e4d61a24a31e1793d81385e8f3f1f4d48417e2308c5ea39dac47e832666363dde044ba7  sysmacros.patch
+62b5b94441288beddd01f2e51e6770c1c7cf1fea0b4354a77849568bf8a350724f6449e7efa04719b9970fa3c0fc1451dcc9dc3368a013b8d72854b23c8ff205  tests-call-name-correctly.patch"

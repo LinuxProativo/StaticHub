@@ -1,0 +1,37 @@
+#!/bin/sh
+
+PKG_NAME=potrace
+PKG_VERSION=1.16
+LINK="https://potrace.sourceforge.net/download/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.gz"
+BINARY="$PKG_NAME"
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add zlib-dev zlib-static
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c $LINK
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+PKG_CONFIG="pkg-config --static" \
+CFLAGS="-static -Os" \
+LDFLAGS="-static" \
+./configure --prefix=/usr --disable-dependency-tracking --disable-shared --enable-static
+make LDFLAGS="-all-static" -j"$(expr "$(nproc)" + 1)"
+
+strip src/$BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v src/$BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

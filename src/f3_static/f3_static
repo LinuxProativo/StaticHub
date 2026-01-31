@@ -1,0 +1,39 @@
+#!/bin/sh
+
+PKG_NAME=f3
+PKG_VERSION=8.0
+LINK="https://github.com/AltraMayor/f3/archive/v$PKG_VERSION.tar.gz"
+BINARY="$PKG_NAME"
+OUTPUT_DIR="$PWD/../../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add argp-standalone eudev-dev linux-headers gettext-static gettext-dev device-mapper-static # parted-dev - build apkbuild in parted_static_libs
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c $LINK
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+CFLAGS="-static -Os" \
+LDFLAGS="-static -largp -lparted -lintl -luuid" \
+make -j"$(expr "$(nproc)" + 1)"
+
+CFLAGS="-static -Os" \
+LDFLAGS="-static -largp -lparted -ldevmapper -lblkid -luuid -lintl" \
+make -j"$(expr "$(nproc)" + 1)" extra
+
+strip f3brew f3fix f3probe f3read f3write
+mkdir -p "$OUTPUT_DIR"
+mv -v f3brew f3fix f3probe f3read f3write "$OUTPUT_DIR"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR"

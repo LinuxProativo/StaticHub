@@ -1,0 +1,37 @@
+#!/bin/sh
+
+PKG_NAME=axel
+PKG_VERSION=2.17.14
+LINK="https://github.com/axel-download-accelerator/axel/releases/download/v$PKG_VERSION/axel-$PKG_VERSION.tar.xz"
+BINARY="$PKG_NAME"
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add openssl-dev openssl-libs-static
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c $LINK
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+PKG_CONFIG="pkg-config --static" CFLAGS="-static -Os" LDFLAGS="-static" ./configure \
+    --disable-nls \
+    --prefix=/usr \
+    --sysconfdir=/etc
+PKG_CONFIG="pkg-config --static" CFLAGS="-static -Os" LDFLAGS="-static" make -j"$(expr "$(nproc)" + 1)"
+
+strip $BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v $BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

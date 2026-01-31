@@ -1,4 +1,23 @@
 ----------------------------
+Sat Jan 31 08:45:05 -03 2026
+----------------------------
+------
+Added:
+------
+axel:       ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=288108d276e4bba7b65c49eadf55986b41d2b6fb, stripped
+jq:         ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=ac342b105d30f54833476c731e968b54bb4827be, stripped
+potrace:    ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=435048b840a5cc6d305a7028beda2bb3e080e496, stripped
+shellcheck: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=a025a07003b4f8c307becd3e187c3608c2d746db, stripped
+--------
+Changed:
+--------
+f3brew:            ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=22883c2255bcb6ffa06d9f6a3b4a1c6319938eb4, stripped
+f3fix:             ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=163cf7d6df2eb77b9201f4cfaecdcdad9efc4fad, stripped
+f3probe:           ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=86e0e05dbd055661d61adc3d3954bc40f9db50e4, stripped
+f3read:            ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=83253bc33e3a4f1b80b644c6a52db85d69e6d8e3, stripped
+f3write:           ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=85291fe1a6f3316fe8bd787195647a5f0667e3ae, stripped
+parted:            ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=96692700791f540b6c7418c29da2e63a8880d666, stripped
+----------------------------
 Tue Nov 11 12:39:00 -03 2025
 ----------------------------
 ------

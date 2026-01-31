@@ -1,0 +1,51 @@
+#!/bin/sh
+
+PKG_NAME=shellcheck
+PKG_VERSION=0.10.0
+LINK="https://github.com/koalaman/shellcheck/archive/v$PKG_VERSION.tar.gz"
+BINARY="$PKG_NAME"
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add ghc cabal g++ libffi-dev curl bash gmp gmp-static
+
+GHC_OPTS="-optl-Wl,-fuse-ld=bfd -split-sections -optc-Os -optl-Wl,--gc-sections -fno-prof-auto -fno-debug-info"
+
+cabal update && rm -rf ~/.cabal
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c $LINK
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+cabal update
+cabal build -j"$(expr "$(nproc)" + 1)" \
+    --enable-executable-static \
+    --enable-executable-stripping \
+    --enable-library-stripping \
+    --enable-split-sections \
+    --enable-split-objs \
+    --disable-tests \
+    --disable-benchmarks \
+    --disable-profiling \
+    --disable-coverage \
+    --disable-documentation \
+    --ghc-options="$MY_GHC_OPTS"
+
+BINARY_PATH=$(find dist-newstyle -type f -name "$PKG_NAME" -executable)
+
+strip $BINARY_PATH
+mkdir -p "$OUTPUT_DIR"
+mv -v $BINARY_PATH "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

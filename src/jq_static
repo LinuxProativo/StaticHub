@@ -1,0 +1,38 @@
+#!/bin/sh
+
+PKG_NAME=jq
+PKG_VERSION=1.8.1
+LINK="https://github.com/jqlang/jq/releases/download/jq-$PKG_VERSION/jq-$PKG_VERSION.tar.gz"
+BINARY="$PKG_NAME"
+OUTPUT_DIR="$PWD/../_output"
+CWD="$(pwd)"
+
+TMPDIR="$(mktemp -d)"
+cd "$TMPDIR" || exit 1
+
+[ "$1" != "" ] && PKG_VERSION="$1"
+
+set -e
+
+apk add oniguruma-dev sed
+
+wget -O ${PKG_NAME}-${PKG_VERSION}.tar.xz -c $LINK
+tar xvf ${PKG_NAME}-${PKG_VERSION}.tar.xz
+
+cd ${PKG_NAME}*${PKG_VERSION}*/
+
+autoreconf -fi
+PKG_CONFIG="pkg-config --static" \
+CFLAGS="-static -Os" \
+LDFLAGS="-static" \
+./configure --prefix=/usr --disable-docs --disable-shared --enable-static
+make LDFLAGS="-all-static" -j"$(expr "$(nproc)" + 1)"
+
+strip $BINARY
+mkdir -p "$OUTPUT_DIR"
+mv -v $BINARY "$OUTPUT_DIR/$BINARY"
+
+cd "$CWD"
+rm -rf "$TMPDIR"
+
+echo "Binário salvo em $OUTPUT_DIR/$BINARY"

@@ -14,12 +14,11 @@ frt="$(comm -12 _news _out)"
 
 for f in $frt
 {
-    tmp="$(comm -23 <(grep "$f" _c_news) <(grep "$f" _c_out))"
+    tmp="$(awk 'NR==FNR {a[$0]; next} !($0 in a)' <(grep "$f" _c_out) <(grep "$f" _c_news))"
     test -z "$tmp" || cng+="${cng:+\n}$tmp"
 }
 
 test -e ../changelog || add="$frt"
-
 test -z "$add" -a -z "$rem" -a -z "$cng" -a -e ../changelog && exit
 test -e ../changelog && bak="$(< ../changelog)" && cp -a ../changelog ./_changelog-bak
 
@@ -27,7 +26,7 @@ echo -e "----------------------------\n$(unset LANG LC_ALL; date)\n-------------
 
 > __block
 test -z "$add" || echo -e "------\nAdded:\n------\n$(grep ELF <(file $add))" >> ../changelog
-test -z "$cng" || echo -e "--------\nChanged:\n--------\n$(grep ELF <(file $cng))" >> ../changelog
+test -z "$cng" || echo -e "--------\nChanged:\n--------\n$cng" >> ../changelog
 test -z "$rem" || echo -e "--------\nRemoved:\n--------\n$(grep ELF <(file $rem))" >> ../changelog
 test -z "$bak" || echo -e "$bak" >> ../changelog
 rm __block
